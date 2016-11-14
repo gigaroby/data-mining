@@ -1,3 +1,5 @@
+import os
+import sys
 import re
 import random
 
@@ -52,13 +54,10 @@ def compute_signature(sh, hash_func_parameters):
 
 
 def minhash_similarity(sh1, sh2, nhf=100):
-    hash_parameters = [
-        (random.randint(0, MAX_HASH_VALUE-10), random.randint(1, MAX_HASH_VALUE-10))
-        for _ in range(nhf)
-    ]
+    mh = MinHasher(nhf)
 
-    sig1 = compute_signature(sh1, hash_parameters)
-    sig2 = compute_signature(sh2, hash_parameters)
+    sig1 = mh.compute_signature(sh1)
+    sig2 = mh.compute_signature(sh2)
 
     eq = 0
     for v1, v2 in zip(sig1, sig2):
@@ -68,16 +67,39 @@ def minhash_similarity(sh1, sh2, nhf=100):
     return eq / nhf
 
 
+class MinHasher:
+    def __init__(self, nhf=100):
+        self.hash_parameters = [
+            (random.randint(0, MAX_HASH_VALUE-10), random.randint(1, MAX_HASH_VALUE-10))
+            for _ in range(nhf)
+        ]
+
+    def compute_signature(self, sh):
+        return compute_signature(sh, self.hash_parameters)
+
+
 def main():
-    text1 = open('1990.txt').read()
-    text2 = open('1991.txt').read()
-    sh1 = list(hashed_shingles(text1, 2))
-    sh2 = list(hashed_shingles(text2, 2))
-    print("done hashing shingles")
-    s1 = set(sh1)
-    s2 = set(sh2)
-    print("with sets: ", len(s1.intersection(s2)) / len(s1.union(s2)))
-    print("with minhash: ", minhash_similarity(sh1, sh2, 100))
+    if len(sys.argv) != 3:
+        print("usage: {} <dir path> <threshold>".format(sys.argv[0]))
+
+    path = sys.argv[1]
+    t = float(sys.argv[2])
+
+    sigs = []
+    mh = MinHasher()
+
+    N = 1000
+    for dirpath, _, filenames in os.walk(top=path):
+        for filename in filter(lambda fn: fn.endswith('.txt'), filenames):
+            if N < 0:
+                break
+            N -= 1
+            complete_name = os.path.join(dirpath, filename)
+            with open(complete_name, 'r') as f:
+                content = f.read()
+                sigs.append((complete_name, mh.compute_signature(hashed_shingles(content, 4))))
+
+    return
 
 
 if __name__ == '__main__':
