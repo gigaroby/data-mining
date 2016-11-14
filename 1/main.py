@@ -1,3 +1,4 @@
+import itertools
 import re
 import random
 
@@ -51,6 +52,15 @@ def compute_signature(sh, hash_func_parameters):
     return signature
 
 
+def compute_signatures_similarity(sig1, sig2, nhf=100):
+    eq = 0
+    for v1, v2 in zip(sig1, sig2):
+        if v1 == v2:
+            eq += 1
+
+    return eq / nhf
+
+
 def minhash_similarity(sh1, sh2, nhf=100):
     hash_parameters = [
         (random.randint(0, MAX_HASH_VALUE-10), random.randint(1, MAX_HASH_VALUE-10))
@@ -60,17 +70,66 @@ def minhash_similarity(sh1, sh2, nhf=100):
     sig1 = compute_signature(sh1, hash_parameters)
     sig2 = compute_signature(sh2, hash_parameters)
 
-    eq = 0
-    for v1, v2 in zip(sig1, sig2):
-        if v1 == v2:
-            eq += 1
+    return compte_signatures_similarity(sig1, sig2, nhf)
 
-    return eq / nhf
+
+def compute_lhs_params(t, nhf):
+    final_b, final_r = 0, 0
+    difference = t
+    for b in range(1, nhf + 1):
+        for r in range(1, (nhf // b) + 1):
+            if b * r != nhf:
+                continue
+            _t = (1/b) ** (1/r)
+            diff = abs(t - _t)
+            if diff < difference:
+                final_b, final_r = b, r
+                difference = diff
+
+    return final_b, final_r
+
+
+def do_hash(elem, limit=None):
+    if limit is None:
+        return hash(elem)
+    return hash(elem) % limit
+
+
+def lhs(signatures, t, nhf=100):
+    b, r = compute_lhs_params(t, nhf)
+    buckets = []
+
+    for i in range(0, nhf, r):
+        bucket = {}
+        buckets.append(bucket)
+
+        for j, c in enumerate(signatures):
+            chunk = c[i:i + r]
+            # print (chunk)
+            chunk_hash = do_hash(tuple(chunk))
+            bucket.setdefault(chunk_hash, []).append(j)
+        # print('\n')
+
+    candidates = set()
+    for bucket in buckets:
+        for v in bucket.values():
+            candidates.update(
+                itertools.combinations(tuple(sorted(v)), 2)
+            )
+
+    res = []
+    for sig1_idx, sig2_idx in candidates:
+        sig1, sig2 = signatures[sig1_idx], signatures[sig2_idx]
+        similarity = compute_signatures_similarity(sig1, sig2)
+        if similarity > t:
+            res.append((sig1_idx, sig2_idx))
+
+    return res
 
 
 def main():
-    text1 = open('1990.txt').read()
-    text2 = open('1991.txt').read()
+    text1 = open('bible.txt').read()
+    text2 = open('ml.txt').read()
     sh1 = list(hashed_shingles(text1, 2))
     sh2 = list(hashed_shingles(text2, 2))
     print("done hashing shingles")
@@ -82,3 +141,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
