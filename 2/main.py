@@ -2,6 +2,8 @@ from typing import List, Set, Any
 
 import itertools
 
+import sys
+
 
 def get_all_items(transactions) -> Set:
     """ Return a set with all the items contained in the dataset """
@@ -23,7 +25,7 @@ def apriori(transactions, support_threshold):
             # get itemsets of size <level> that appear both in the basket
             # and in the candidates for level <level>.
             itemsets = candidates[level - 1].intersection(
-                itertools.combinations(sorted(basket), level)
+                itertools.combinations(sorted(basket), level)  # todo: is it allowed to use itertools.combinations?
             )
             for itemset in itemsets:
                 counter[itemset] = counter.get(itemset, 0) + 1
@@ -64,8 +66,16 @@ def parse_file(path: str) -> List[Set[Any]]:
             for row in f.read().strip().split('\n')
             ]
 
+
 def main():
-    pass
+    if len(sys.argv) != 3:
+        print("usage: {} <dataset path> <support threshold>".format(sys.argv[0]))
+
+    path = sys.argv[1]
+    support_threshold = float(sys.argv[2])
+
+    transactions = parse_file(path)
+    print(apriori(transactions, support_threshold))
 
 if __name__ == '__main__':
     main()
