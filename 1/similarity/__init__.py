@@ -6,10 +6,12 @@ from .runner import setup_comparator, run_comparison
 
 def main():
     parser = argparse.ArgumentParser(description='runs similarity checks on a set of documents')
-    parser.add_argument('--method', help="comparison method", default='lsh', choices=['exact', 'minhash', 'lsh'])
+    parser.add_argument('--method', help="comparison method (default=lsh)", default='lsh', choices=['exact', 'minhash', 'lsh'])
 
-    parser.add_argument('--shingle-size', help="size of the shingles to create", default=3)
-    parser.add_argument('--threshold', help="similarity threshold", default=.4, type=float)
+    parser.add_argument('--shingle-size', help="size of the shingles to create (default=3)",
+                        default=3)
+    parser.add_argument('--threshold', help="similarity threshold (default: 0.4)",
+                        default=.4, type=float)
     parser.add_argument('--hash-functions',
                         help="number of hash functions to use. ignored when method=exact", default=100)
 
