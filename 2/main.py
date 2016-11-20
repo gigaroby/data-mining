@@ -25,7 +25,7 @@ def apriori(transactions, support_threshold):
             # get itemsets of size <level> that appear both in the basket
             # and in the candidates for level <level>.
             itemsets = candidates[level - 1].intersection(
-                itertools.combinations(sorted(basket), level)  # todo: is it allowed to use itertools.combinations?
+                itertools.combinations(sorted(basket), level)
             )
             for itemset in itemsets:
                 counter[itemset] = counter.get(itemset, 0) + 1
