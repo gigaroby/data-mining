@@ -30,7 +30,8 @@ Many parameters can be tweaked, below are some examples of invocations, the comp
 ~ $ check-similarity --mode exact --file-limit 10000 Documents/
 # tweak the number of hash functions for min-hashing and 0.6 similarity
 # (default similarity is 0.4)
-~ $ check-similarity --mode minhash --threshold 0.6 --hash-functions 50 Documents
+~ $ check-similarity --mode minhash --threshold 0.6 \
+                     --hash-functions 50 Documents
 ```
 
 # Solution
