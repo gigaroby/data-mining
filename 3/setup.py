@@ -4,9 +4,10 @@ setup(
     name='hyperball',
     version='0.1',
     packages=['iperpalla'],
+    install_requires=['numpy'],
     entry_points='''
         [console_scripts]
-        check-similarity=similarity:main
+        run-hyperball=iperpalla:main
     ''',
 )
 
