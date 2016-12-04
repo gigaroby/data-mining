@@ -24,6 +24,8 @@ class HyperLogLog(object):
         self.buckets = [0] * self._m
 
     def add(self, element):
+        if isinstance(element, str):
+            element = element.encode('utf-8')
         # take first 64 bits and turn them into 64 bit integer
         # (endian-ess does not really matter)
         h = md5()
@@ -52,6 +54,8 @@ class HyperLogLog(object):
         # therefore we sum 1 to whatever trailing value we have
         self.buckets[idx] = max(self.buckets[idx], trailing + 1)
 
+        return self
+
     def count(self):
         # compute harmonic mean
         z = 1 / sum(2 ** -x for x in self.buckets)
@@ -68,7 +72,6 @@ class HyperLogLog(object):
         return e
 
     def union(self, other):
-        new = deepcopy(self)
-        new_buckets = [max(a, b) for a, b in zip(self.buckets, other.buckets)]
-        new.buckets = new_buckets
-        return new
+        for i in range(len(self.buckets)):
+            self.buckets[i] = max(self.buckets[i], other.buckets[i])
+        return self

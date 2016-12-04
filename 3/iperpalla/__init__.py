@@ -1,6 +1,6 @@
+import os
 import csv
 import argparse
-import pathlib
 
 from .hyperball import Hyperball
 
@@ -11,8 +11,8 @@ def main():
     parser.add_argument('path', help="tsv file containing graph")
 
     args = parser.parse_args()
-    path = pathlib.Path(args.path)
-    if not path.is_file():
+    path = args.path
+    if not os.path.isfile(path):
         parser.exit(1, "path must be provided")
 
     adj_list = {}
@@ -23,4 +23,4 @@ def main():
             adj_list[row[0]].append(row[1])
 
     hb = Hyperball(list(adj_list.items()))
-    print(hb.run())
+    hb.run(print)
