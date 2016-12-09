@@ -27,6 +27,32 @@ Each colum represent one edge of the graph.
 The program is implemented as a Python module and divided into two files.
 The algorithms are implemented in `hyperloglog.py` and `hyperball.py` respectively.
 
+## Sample run
+Below is the output of running `run-hyperball` on the [moreno-oz](http://konect.uni-koblenz.de/networks/moreno_oz) network.
+Nodes in the network represent people and edges friendships.
+The output is as follows:
+
+```bash
+~ $ run-hyperball moreno_oz/out.moreno_oz_oz
+node    closeness  lin        harmonic
+  54    0.00352    205.427    124.327
+ 169    0.00344    200.908    171.180
+  71    0.00317    185.085    132.712
+ 126    0.00305    178.262    112.034
+ 115    0.00305    177.851    150.300
+ 185    0.00304    177.707    102.167
+  50    0.00300    174.921    123.551
+ 138    0.00300    174.886    137.556
+  73    0.00295    172.147    152.589
+ 151    0.00294    171.478    152.584
+  51    0.00288    168.379    131.108
+ 133    0.00288    167.831    140.503
+ 125    0.00285    166.307    138.909
+  85    0.00284    165.755    137.721
+ 156    0.00281    164.300    126.630
+... more output ...
+```
+
 ## Algorithms
 ### Hyperloglog
 Hyperloglog is a algorithm designed to solve the problem of estimating the cardinality of a set S when it is impractical to store all of the elements.
