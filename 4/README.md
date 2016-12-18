@@ -15,6 +15,8 @@ The code is implemented as a matlab script.
 The code is divided in two main parts, the first one to compute and plot the Fiedler vector and the second one to perform the clustering and plot the partitioned graph.
 The Fiedler vector is only used to analyse the structure of the graph, but it is not used to perform the actual partitioning.
 
+The graph partitioning is implemented by following the algorithm presented in the paper step-by-step. We only skipped step 1, as we already had the graph in the form of an adjacency matrix.
+
 # Execution
 We executed the code on the two provided datasets `example1.dat` and `example2.dat`.
 
