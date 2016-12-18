@@ -1,4 +1,4 @@
-filename = 'example1.dat';
+filename = 'example2.dat';
 
 E = csvread(filename);
 col1 = E(:,1);
@@ -10,14 +10,17 @@ A  = full(As);
 d = sum(A, 2);
 D = diag(d);
 
+% Plot Fiedler vector
+fied_L = D - A;
+[fied_vecs, fied_vals] = eigs(fied_L, size(A, 1)-1);
+fiedler_vec = fied_vecs(:, end-1);
+% plot(sort(fiedler_vec));
+
+% Partitioning
 L = D ^ (-1/2) * A * D ^ (-1/2);
-%L = D - A;
-% [vecs, vals] = eig(L);  % eigenvectors are on columns (1 column = 1 eigenvector)
-[vecs, vals] = eigs(L, size(A,1)-1);
-% ds_vecs = fliplr(vecs);
-ds_vecs = vecs;
-k = 4;
-X = ds_vecs(:,1:k);
+[vecs, vals] = eigs(L, size(A,1)-1); % eigenvectors are on columns (1 column = 1 eigenvector)
+k = 2;
+X = vecs(:,1:k);
 SS = arrayfun(@(n) norm(A(n,:)), 1:size(A,1));
 Y = diag(1./SS) * X;
 idx = kmeans(Y, k);
