@@ -11,21 +11,21 @@ d = sum(A, 2);
 D = diag(d);
 
 % Plot Fiedler vector
-fied_L = D - A;
-[fied_vecs, fied_vals] = eigs(fied_L, size(A, 1)-1);
-fiedler_vec = fied_vecs(:, end-1);
+% fied_L = D - A;
+% [fied_vecs, fied_vals] = eigs(fied_L, size(A, 1)-1);
+% fiedler_vec = fied_vecs(:, end-1);
 % plot(sort(fiedler_vec));
 
 % Partitioning
 L = D ^ (-1/2) * A * D ^ (-1/2);
-[vecs, vals] = eigs(L, size(A,1)-1); % eigenvectors are on columns (1 column = 1 eigenvector)
+[vecs, vals] = eigs(L, size(A,1)-1); % Eigenvectors are on columns (1 column = 1 eigenvector)
 k = 2;
 X = vecs(:,1:k);
 SS = arrayfun(@(n) norm(A(n,:)), 1:size(A,1));
 Y = diag(1./SS) * X;
-idx = kmeans(Y, k);
+[idx, C, sumd] = kmeans(Y, k);
 
-% plot
+% Plot the partitions
 G = graph(A);
 p = plot(G);
 
