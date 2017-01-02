@@ -4,8 +4,6 @@
 set term png small size 1024,786
 set output sprintf('%s.png', filename)
 
-
-
 set style line 1 lc rgb "#1a9850" lw 1.5
 set style line 2 lc rgb "black" lw 1.5
 set style line 3 lc rgb "brown" lw 1.5

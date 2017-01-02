@@ -10,5 +10,4 @@ fi
 
 gnuplot -e "filename='$1'" graph.gnuplot
 
-
 open "$1.png"
